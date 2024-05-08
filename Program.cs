@@ -2,12 +2,16 @@ using System.Globalization;
 using System.Threading.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using NetCoreWebAPI.Data;
+using NetCoreWebAPI.Interfaces.Repositories;
+using NetCoreWebAPI.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddScoped<ISuperHeroRepository, SuperHeroRepository>();
 
 // Rate limiting settings
 builder.Services.AddRateLimiter(options => 

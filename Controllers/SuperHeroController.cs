@@ -1,12 +1,11 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 using NetCoreWebAPI.Interfaces.Repositories;
 using NetCoreWebAPI.Models;
 
 namespace NetCoreWebAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api")]
     [ApiController]
     public class SuperHeroController : ControllerBase
     {
@@ -18,6 +17,7 @@ namespace NetCoreWebAPI.Controllers
         }
 
         [HttpPost]
+        [Route("addSuperHeros")]
         public async Task<ActionResult> AddSuperHeros()
         {
             var superHeros = new List<SuperHeros>
@@ -47,7 +47,7 @@ namespace NetCoreWebAPI.Controllers
             return Ok(superHeros);
         }
 
-        [HttpGet]
+        [HttpGet("getSuperHeros")]
         public async Task<ActionResult<List<SuperHeros>>> GetSuperHeros ()
         {
             List<SuperHeros> superheros = await _superHeroRepository.GetSuperHeros();
@@ -55,9 +55,9 @@ namespace NetCoreWebAPI.Controllers
             return Ok(superheros);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("getSuperHero/{id}")]
         [EnableRateLimiting("Fixed")]
-        public async Task<ActionResult<SuperHeros>> GetSuperHeroById(int id)
+        public async Task<ActionResult<SuperHeros>> GetSuperHero(int id)
         {
             SuperHeros? superhero = await _superHeroRepository.GetSuperHeroById(id);
 

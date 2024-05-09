@@ -14,13 +14,13 @@ namespace NetCoreWebAPI.Models
         [Column(TypeName = "int")]
         public int StatusCode  { get; set; }
 
-        [Column(TypeName = "varchar(300)")]
+        [Column(TypeName = "varchar(255)")]
         public string? Message  { get; set; }
 
-        [Column(TypeName = "varchar(500)")]
+        [Column(TypeName = "varchar(1000)")]
         public string? ErrorPath  { get; set; }
         
-        [Column(TypeName = "varchar(50)")]
+        [Column(TypeName = "text")]
         public string? Device  { get; set; }
 
         [Column(TypeName = "datetime")]

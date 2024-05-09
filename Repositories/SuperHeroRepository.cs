@@ -8,6 +8,7 @@ namespace NetCoreWebAPI.Repositories
     public class SuperHeroRepository : ISuperHeroRepository
     {
         private readonly ApplicationDbContext _context;
+
         public SuperHeroRepository(ApplicationDbContext context)
         {
             _context = context;

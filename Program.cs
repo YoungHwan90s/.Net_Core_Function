@@ -3,6 +3,7 @@ using System.Threading.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using NetCoreWebAPI.Data;
 using NetCoreWebAPI.Interfaces.Repositories;
+using NetCoreWebAPI.Middlewares;
 using NetCoreWebAPI.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +13,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<ISuperHeroRepository, SuperHeroRepository>();
+builder.Services.AddTransient<ExceptionHandlingMiddleware>();
 
 // Rate limiting settings
 builder.Services.AddRateLimiter(options => 
@@ -35,7 +37,7 @@ builder.Services.AddRateLimiter(options =>
         partitionKey: httpContext.Connection.RemoteIpAddress?.ToString(),
         factory: _ => new FixedWindowRateLimiterOptions
         {
-            PermitLimit = 5,
+            PermitLimit = 3,
             Window = TimeSpan.FromSeconds(5)
         }));
 
@@ -88,15 +90,23 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 var app = builder.Build();
 
+app.UseStatusCodePages(async statusCodeContext
+    => await Results.Problem(statusCode: statusCodeContext.HttpContext.Response.StatusCode)
+        .ExecuteAsync(statusCodeContext.HttpContext));
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 app.UseRateLimiter();
 
 app.UseHttpsRedirection();
+
+// Minimal Api
+app.MapGet("/", () => "Minimal api test").WithName("Get hello!").RequireRateLimiting("Fixed");
 
 app.UseAuthorization();
 

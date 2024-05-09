@@ -1,4 +1,5 @@
 @NetCoreWebAPI_HostAddress = https://localhost:7185
 
-GET {{NetCoreWebAPI_HostAddress}}/weatherforecast/
-Accept: application/json
+GET https://localhost:7185/
+Content-Type: application/json; charset=UTF-8
+###

@@ -20,9 +20,24 @@ namespace NetCoreWebAPI.Repositories
             return await _context.SaveChangesAsync();
         }
 
-        public async Task<List<SuperHeros>> GetSuperHeros()
+        public async Task<List<SuperHeros>?> GetSuperHeros()
         {
             return await _context.SuperHeros.ToListAsync();
+
+            // Distributed cache example
+            //try
+            //{
+            //    return await _cacheService.GetAsync<List<SuperHeros>>("superHeros", async () =>
+            //    {
+            //        List<SuperHeros>? superHeros = await _context.SuperHeros.ToListAsync();
+
+            //        return superHeros;
+            //    });
+            //}
+            //catch (Exception ex)
+            //{
+            //    throw new Exception(ex.Message);
+            //}
         }
 
         public async Task<SuperHeros?> GetSuperHeroById(int id)

@@ -3,8 +3,10 @@ using System.Threading.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using NetCoreWebAPI.Data;
 using NetCoreWebAPI.Interfaces.Repositories;
+using NetCoreWebAPI.Interfaces.Services;
 using NetCoreWebAPI.Middlewares;
 using NetCoreWebAPI.Repositories;
+using NetCoreWebAPI.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +16,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<ISuperHeroRepository, SuperHeroRepository>();
 builder.Services.AddTransient<ExceptionHandlingMiddleware>();
+//builder.Services.AddSingleton<ICacheService, CacheService>();
 
 // Rate limiting settings
 builder.Services.AddRateLimiter(options => 
@@ -87,6 +90,18 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
     options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
 });
+
+// Distributed Cache - Redis
+//builder.Services.AddStackExchangeRedisCache(option =>
+//{
+//    var redisConnection = builder.Configuration.GetValue<string>("AzureRedisConnection");
+
+//    if (string.IsNullOrEmpty(redisConnection))
+//    {
+//        throw new InvalidOperationException("Redis connection string is null or empty.");
+//    }
+//    option.Configuration = redisConnection;
+//});
 
 var app = builder.Build();
 

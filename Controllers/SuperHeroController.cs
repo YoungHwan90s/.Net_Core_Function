@@ -50,7 +50,7 @@ namespace NetCoreWebAPI.Controllers
         [HttpGet("getSuperHeros")]
         public async Task<ActionResult<List<SuperHeros>>> GetSuperHeros ()
         {
-            List<SuperHeros> superheros = await _superHeroRepository.GetSuperHeros();
+            List<SuperHeros>? superheros = await _superHeroRepository.GetSuperHeros();
 
             return Ok(superheros);
         }
